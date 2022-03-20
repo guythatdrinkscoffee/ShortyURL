@@ -14,6 +14,6 @@ func NewRepository(db *internal.Database) Repository {
 	return Repository{db}
 }
 
-func (r *Repository) CreateURL(ctx context.Context, shortUrl models.ShortURL) (interface{}, error) {
-	return r.DB.Create(ctx, shortUrl)
+func (r *Repository) CreateURL(ctx context.Context, shortUrl *models.ShortURL) (interface{}, error) {
+	return r.DB.Create(ctx, *shortUrl)
 }

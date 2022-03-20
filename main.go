@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/guythatdrinkscoffee/ShortyURL/controllers"
 	"github.com/guythatdrinkscoffee/ShortyURL/internal"
 	"github.com/guythatdrinkscoffee/ShortyURL/repository"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -40,10 +41,15 @@ func main() {
 	collection := client.Database("shorty").Collection("urls")
 
 	db := internal.NewDB(collection)
-	_ = repository.NewRepository(db)
+	repo := repository.NewRepository(db)
+	mapper := controllers.NewMapper(repo)
 
 	//Mux Config
 	router := mux.NewRouter()
+
+	mappingRoute := router.Methods(http.MethodPost).Subrouter()
+	mappingRoute.HandleFunc("/map", mapper.MapURL)
+	mappingRoute.Use(mapper.ValidateURL)
 
 	if err = http.ListenAndServe(":8080", router); err != nil {
 		log.Fatalln("Failed to start server...")
