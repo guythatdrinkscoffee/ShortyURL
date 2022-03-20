@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/guythatdrinkscoffee/ShortyURL/internal"
+	"github.com/guythatdrinkscoffee/ShortyURL/repository"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -38,7 +39,8 @@ func main() {
 
 	collection := client.Database("shorty").Collection("urls")
 
-	_ = internal.NewDB(collection)
+	db := internal.NewDB(collection)
+	_ = repository.NewRepository(db)
 
 	//Mux Config
 	router := mux.NewRouter()

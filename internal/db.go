@@ -11,13 +11,11 @@ type Database struct {
 	Collection *mongo.Collection
 }
 
-func NewDB(c *mongo.Collection) Database {
-	return Database{
-		Collection: c,
-	}
+func NewDB(c *mongo.Collection) *Database {
+	return &Database{c}
 }
 
-func (d *Database) insert(ctx context.Context, shortUrl models.ShortURL) (interface{}, error) {
+func (d *Database) Create(ctx context.Context, shortUrl models.ShortURL) (interface{}, error) {
 	id, err := d.Collection.InsertOne(ctx, bson.D{
 		{"hash", shortUrl.Hash},
 		{"original_url", shortUrl.OriginalURL},
