@@ -76,7 +76,11 @@ func (m *Mapper) MapURL(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	json.NewEncoder(writer).Encode(shortUrl)
+	res := models.ResponsePayload{
+		"localhost:8080/" + key,
+	}
+
+	json.NewEncoder(writer).Encode(res)
 }
 
 func isValidUrl(urlString string) (*url.URL, error) {

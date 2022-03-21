@@ -42,14 +42,18 @@ func main() {
 
 	db := internal.NewDB(collection)
 	repo := repository.NewRepository(db)
-	mapper := controllers.NewMapper(repo)
+	mapperController := controllers.NewMapper(repo)
+	redirectController := controllers.NewRedirect(repo)
 
 	//Mux Config
 	router := mux.NewRouter()
 
 	mappingRoute := router.Methods(http.MethodPost).Subrouter()
-	mappingRoute.HandleFunc("/map", mapper.MapURL)
-	mappingRoute.Use(mapper.ValidateURL)
+	mappingRoute.HandleFunc("/map", mapperController.MapURL)
+	mappingRoute.Use(mapperController.ValidateURL)
+
+	redirectRoute := router.Methods(http.MethodGet).Subrouter()
+	redirectRoute.HandleFunc("/{hash}", redirectController.Redirect)
 
 	if err = http.ListenAndServe(":8080", router); err != nil {
 		log.Fatalln("Failed to start server...")

@@ -29,3 +29,15 @@ func (d *Database) Create(ctx context.Context, shortUrl models.ShortURL) (interf
 
 	return id.InsertedID, nil
 }
+
+func (d *Database) Find(ctx context.Context, hash string) (*models.ShortURL, error) {
+	var doc *models.ShortURL
+
+	err := d.Collection.FindOne(ctx, bson.M{"hash": hash}).Decode(&doc)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return doc, err
+}

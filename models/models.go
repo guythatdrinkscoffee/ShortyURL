@@ -15,3 +15,7 @@ type RequestPayload struct {
 	Url   string
 	Alias string
 }
+
+type ResponsePayload struct {
+	ShortUrl string `json:"hash"`
+}
